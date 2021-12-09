@@ -13,14 +13,14 @@ var supplierService *services.SupplierService
 
 var scooterModelKeyRoutes = []Route{
 	{
-		Uri:     `/createScooterModel`,
-		Method:  http.MethodPost,
-		Handler: createScooterModel,
-	},
-	{
 		Uri:     `/getScooterModels`,
 		Method:  http.MethodGet,
 		Handler: getScooterModels,
+	},
+	{
+		Uri:     `/createScooterModel`,
+		Method:  http.MethodPost,
+		Handler: createScooterModel,
 	},
 	{
 		Uri:     `/getScooterModel/{id}`,

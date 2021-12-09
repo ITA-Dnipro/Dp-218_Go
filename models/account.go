@@ -7,6 +7,10 @@ type PaymentType struct{
 	Name   string `json:"name"`
 }
 
+type PaymentTypeList struct {
+	PaymentTypes []PaymentType `json:"roles"`
+}
+
 type Account struct {
 	ID     int    `json:"id"`
 	Name   string `json:"name"`
@@ -18,7 +22,6 @@ type AccountList struct {
 	Accounts []Account `json:"accounts"`
 }
 
-
 type AccountTransaction struct {
 	ID          int         `json:"id"`
 	DateTime    time.Time   `json:"date_time"`
@@ -26,7 +29,7 @@ type AccountTransaction struct {
 	AccountFrom Account     `json:"account_from"`
 	AccountTo   Account     `json:"account_to"`
 	Order       Order       `json:"order"`
-	AmountCents int        `json:"amount_cents"`
+	AmountCents int        	`json:"amount_cents"`
 }
 
 type AccountTransactionList struct {

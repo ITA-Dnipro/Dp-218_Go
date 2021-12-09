@@ -6,7 +6,6 @@ import (
 	"Dp218Go/routing"
 	"Dp218Go/routing/httpserver"
 	"Dp218Go/services"
-	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -21,13 +20,15 @@ import (
 var sessionKey = "secretkey"
 
 func main() {
-
+/*
 	var connectionString = fmt.Sprintf("postgres://%s:%s@%s:%s/%s",
 		configs.POSTGRES_USER,
 		configs.POSTGRES_PASSWORD,
 		configs.PG_HOST,
 		configs.PG_PORT,
 		configs.POSTGRES_DB)
+ */
+	var connectionString = "postgres://scooteradmin:Megascooter!@localhost:5444/scooterdb"
 
 	db, err := postgres.NewConnection(connectionString)
 	if err != nil {

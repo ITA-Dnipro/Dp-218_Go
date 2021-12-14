@@ -1,6 +1,8 @@
 package repositories
 
-import "Dp218Go/models"
+import (
+	"Dp218Go/models"
+)
 
 type ScooterModelRepoI interface {
 	CreateScooterModel(scooterModel *models.ScooterModel)error
@@ -11,15 +13,13 @@ type ScooterModelRepoI interface {
 type ScooterRepoI interface {
 	GetAllScooters() (*models.ScooterList, error)
 	GetScooterByID(id int) (models.Scooter, error)
-	GetScootersByModelId(id int)(*models.ScooterList, error)
 	AddScooter(scooter *models.Scooter) error
-	UpdateScooter(scooterId int,scooterData models.Scooter) (models.Scooter, error)
+	EditScooter(scooterId int,scooterData models.Scooter) (models.Scooter, error)
 	DeleteScooter(id int) error
 	FindScooterList(scooterModel *models.ScooterModelList, scooterModelId int ) (models.ScooterModel, error)
 }
 
-
-type PaymentTypeI interface {
+type PaymentTypeRepoI interface {
 	GetPaymentTypes() (*models.PaymentTypeList, error)
 	GetPaymentTypeById(paymentTypeId int) (models.PaymentType, error)
 	FindPaymentTypeList(paymentType *models.PaymentTypeList, paymentTypeId int)(models.PaymentType, error)

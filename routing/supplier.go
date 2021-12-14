@@ -33,9 +33,9 @@ var scooterModelKeyRoutes = []Route{
 		Handler: getAllScooters,
 	},
 	{
-		Uri:     `/getScootersByModelId/{id}`,
+		Uri:     `/getScooterById/{id}`,
 		Method:  http.MethodGet,
-		Handler: getScooterByModelId,
+		Handler: getScooterById,
 	},
 	{
 		Uri:     `/createScooter`,
@@ -43,15 +43,19 @@ var scooterModelKeyRoutes = []Route{
 		Handler: createScooter,
 	},
 	{
-		Uri:     `/updateScooter`,
+		Uri:     `/editScooter/{id}`,
 		Method:  http.MethodPut,
-		Handler: updateScooterSerial,
+		Handler: editScooter,
 	},
 	{
-		Uri:     `/createScooter`,
+		Uri:     `/deleteScooter/{id}`,
 		Method:  http.MethodDelete,
 		Handler: deleteScooter,
 	},
+}
+
+type scooterWithModelList struct {
+	models.Scooter
 }
 
 func AddSupplierHandler(router *mux.Router, service *services.SupplierService){
@@ -82,23 +86,20 @@ func getScooterModels(w http.ResponseWriter, r *http.Request) {
 	format := GetFormatFromRequest(r)
 
 	r.ParseForm()
-	searchData := r.FormValue("SearchData")
-	if len(searchData)==0 {
-		modelList, err = supplierService.GetScooterModels()
-	}
 
+	modelList, err = supplierService.GetScooterModels()
 	if err != nil {
 		ServerErrorRender(format, w)
 		return
 	}
 
-	EncodeAnswer(format, w, modelList, HTMLPath+"user-list.html")
+	EncodeAnswer(format, w, modelList, HTMLPath+"scooter-model-list.html")
 }
 
 func getScooterModelById(w http.ResponseWriter, r *http.Request) {
 	format := GetFormatFromRequest(r)
-
-	modelId, err := strconv.Atoi(mux.Vars(r)[userIDKey])
+	fmt.Println(mux.Vars(r))
+	modelId, err := strconv.Atoi(mux.Vars(r)["id"])
 	if err != nil {
 		EncodeError(format, w, ErrorRendererDefault(err))
 		return
@@ -109,7 +110,7 @@ func getScooterModelById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	EncodeAnswer(format, w, &scooterModel, HTMLPath+"user-edit.html")
+	EncodeAnswer(format, w, &scooterModel, HTMLPath+"scooter-model-edit.html")
 }
 
 func getAllScooters(w http.ResponseWriter, r *http.Request) {
@@ -127,27 +128,24 @@ func getAllScooters(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	EncodeAnswer(format, w, scooters, HTMLPath+"user-list.html")
+	EncodeAnswer(format, w, scooters, HTMLPath+"scooters-list.html")
 }
 
-func getScooterByModelId(w http.ResponseWriter, r *http.Request) {
-	var modelList = &models.ScooterList{}
-	var err error
+func getScooterById(w http.ResponseWriter, r *http.Request) {
 	format := GetFormatFromRequest(r)
 
-	r.ParseForm()
-	modelId, err := strconv.Atoi(mux.Vars(r)[userIDKey])
+	scooterId, err := strconv.Atoi(mux.Vars(r)["id"])
 	if err != nil {
 		EncodeError(format, w, ErrorRendererDefault(err))
 		return
 	}
-	modelList, err = supplierService.GetScooterByModelId(modelId)
+	scooter, err := supplierService.GetScooterById(scooterId)
 	if err != nil {
 		EncodeError(format, w, ErrorRendererDefault(err))
 		return
 	}
 
-	EncodeAnswer(format, w, modelList, HTMLPath+"user-list.html")
+	EncodeAnswer(format, w, &scooterWithModelList{scooter}, HTMLPath+"user-edit.html")
 }
 
 func createScooter(w http.ResponseWriter, r *http.Request) {
@@ -164,11 +162,10 @@ func createScooter(w http.ResponseWriter, r *http.Request) {
 	EncodeAnswer(FormatJSON, w, scooter)
 }
 
-
-func updateScooterSerial(w http.ResponseWriter, r *http.Request) {
+func editScooter(w http.ResponseWriter, r *http.Request) {
 	format := GetFormatFromRequest(r)
 
-	scooterId, err := strconv.Atoi(mux.Vars(r)[userIDKey])
+	scooterId, err := strconv.Atoi(mux.Vars(r)["id"])
 	if err != nil {
 		EncodeError(format, w, ErrorRendererDefault(err))
 		return
@@ -185,13 +182,13 @@ func updateScooterSerial(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	EncodeAnswer(format, w, &scooterData, HTMLPath+"user-edit.html")
+	EncodeAnswer(format, w, &scooterData, HTMLPath+"scooter-edit.html")
 }
 
 func deleteScooter(w http.ResponseWriter, r *http.Request) {
 	format := GetFormatFromRequest(r)
 
-	userId, err := strconv.Atoi(mux.Vars(r)[userIDKey])
+	userId, err := strconv.Atoi(mux.Vars(r)["id"])
 	if err != nil {
 		EncodeError(format, w, ErrorRendererDefault(err))
 		return

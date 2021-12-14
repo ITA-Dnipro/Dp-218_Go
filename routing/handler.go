@@ -63,11 +63,13 @@ func showLoginPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func methodNotAllowedHandler(w http.ResponseWriter, r *http.Request) {
-	EncodeError(FormatHTML, w, ErrorRenderer(fmt.Errorf("method not allowed"), "Not allowed", http.StatusMethodNotAllowed))
+	format := GetFormatFromRequest(r)
+	EncodeError(format, w, ErrorRenderer(fmt.Errorf("method not allowed"), "Not allowed", http.StatusMethodNotAllowed))
 }
 
 func notFoundHandler(w http.ResponseWriter, r *http.Request) {
-	EncodeError(FormatHTML, w, ErrorRenderer(fmt.Errorf("resource not found"), "Not found", http.StatusNotFound))
+	format := GetFormatFromRequest(r)
+	EncodeError(format, w, ErrorRenderer(fmt.Errorf("resource not found"), "Not found", http.StatusNotFound))
 }
 
 func ServerErrorRender(format int, w http.ResponseWriter) {
@@ -154,3 +156,4 @@ func GetFormatFromRequest(r *http.Request) int {
 	}
 	return FormatHTML
 }
+

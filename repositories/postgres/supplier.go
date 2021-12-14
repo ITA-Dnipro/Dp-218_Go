@@ -13,13 +13,13 @@ type SupplierRepoDB struct {
 	db repositories.AnyDatabase
 }
 
-func NewSupplierRepoDB(db repositories.AnyDatabase) *SupplierRepoDB {
+func NewSupplierRepoDB(db repositories.AnyDatabase) *SupplierRepoDB{
 	return &SupplierRepoDB{db}
 }
 
 func (sup *SupplierRepoDB)CreateScooterModel(model *models.ScooterModel)error{
 	var id int
-	querySQL := `INSERT INTO scooter_model(payment_type_id, model_name, max_weight, speed) 
+	querySQL := `INSERT INTO scooter_models(payment_type_id, model_name, max_weight, speed) 
 		VALUES($1, $2, $3, $4)
 		RETURNING id;`
 	err := sup.db.QueryResultRow(context.Background(), querySQL, model.PaymentType.ID, model.ModelName, model.MaxWeight, model.Speed).Scan(&id)
@@ -38,7 +38,7 @@ func (sup *SupplierRepoDB)GetScooterModels() (*models.ScooterModelList, error) {
 		return list, err
 	}
 
-	querySQL := `SELECT * FROM scooter_model ORDER BY id DESC;`
+	querySQL := `SELECT id, payment_type_id, model_name, max_weight, speed FROM scooter_models ORDER BY id DESC;`
 	rows, err := sup.db.QueryResult(context.Background(), querySQL)
 	if err != nil {
 		return list, err
@@ -47,7 +47,7 @@ func (sup *SupplierRepoDB)GetScooterModels() (*models.ScooterModelList, error) {
 	for rows.Next() {
 		var model models.ScooterModel
 		var paymentTypeId int
-		err := rows.Scan(&model.ID, &model.ModelName, &model.MaxWeight, &model.Speed, &paymentTypeId)
+		err := rows.Scan(&model.ID, &paymentTypeId, &model.ModelName, &model.MaxWeight, &model.Speed)
 		if err != nil {
 			return list, err
 		}
@@ -65,9 +65,16 @@ func (sup *SupplierRepoDB)GetScooterModels() (*models.ScooterModelList, error) {
 func (sup *SupplierRepoDB) GetScooterModelById(modelId int) (models.ScooterModel, error) {
 	scooterModel := models.ScooterModel{}
 
-	querySQL := `SELECT * FROM scooter_models WHERE id = $1;`
+	querySQL := `SELECT id, payment_type_id, model_name, max_weight, speed  FROM scooter_models WHERE id = $1;`
 	row := sup.db.QueryResultRow(context.Background(), querySQL, modelId)
-	err := row.Scan(&scooterModel.ID, &scooterModel.PaymentType.ID, &scooterModel.ModelName, &scooterModel.MaxWeight, &scooterModel.Speed)
+
+	var paymentTypeId int
+	err := row.Scan(&scooterModel.ID, &paymentTypeId, &scooterModel.ModelName, &scooterModel.MaxWeight, &scooterModel.Speed)
+	if err != nil {
+		return models.ScooterModel{}, err
+	}
+	scooterModel.PaymentType, err = sup.GetPaymentTypeById(paymentTypeId)
+
 	return scooterModel, err
 }
 
@@ -79,7 +86,7 @@ func (sup *SupplierRepoDB)GetAllScooters() (*models.ScooterList, error) {
 		return list, err
 	}
 
-	querySQL := `SELECT * FROM scooter ORDER BY id DESC;`
+	querySQL := `SELECT * FROM scooters ORDER BY id DESC;`
 	rows, err := sup.db.QueryResult(context.Background(), querySQL)
 	if err != nil {
 		return list, err
@@ -115,66 +122,54 @@ func (sup *SupplierRepoDB)FindScooterList(scooterModel *models.ScooterModelList,
 func (sup *SupplierRepoDB) GetScooterByID(id int)(models.Scooter, error){
 	scooter := models.Scooter{}
 
-	querySQL := `SELECT * FROM scooters WHERE id = $1;`
+	querySQL := `SELECT id, model_id, owner_id, serial_number FROM scooters WHERE id = $1;`
 	row := sup.db.QueryResultRow(context.Background(), querySQL, id)
 
-	err := row.Scan(&scooter.ID, &scooter.ScooterModel.ID, &userId,  &scooter.SerialNumber)
+	var modelId int
+	err := row.Scan(&scooter.ID, &modelId,  &userId, &scooter.SerialNumber)
+	if err != nil {
+		return models.Scooter{}, err
+	}
+	scooter.ScooterModel, err = sup.GetScooterModelById(modelId)
+
 	return scooter, err
 }
 
-func (sup *SupplierRepoDB)GetScootersByModelId(id int)(*models.ScooterList, error){
-	list := &models.ScooterList{}
-
-	querySQL := `SELECT * FROM scooters WHERE scooter_model = $1;`
-	rows, err := sup.db.QueryResult(context.Background(), querySQL, id)
-	if err != nil {
-		return list, err
-	}
-
-	for rows.Next() {
-		var scooter models.Scooter
-		err := rows.Scan(&scooter.ID, &scooter.ScooterModel.ID, &scooter.User,
-			&scooter.SerialNumber)
-		if err != nil {
-			return list, err
-		}
-
-		list.Scooters = append(list.Scooters, scooter)
-	}
-	return list, nil
-}
-
-
 func (sup *SupplierRepoDB) AddScooter(scooter *models.Scooter) error {
 	var id int
-	querySQL := `INSERT INTO scooters(scooter_model, user, serial_number)
-	   		VALUES($1, $2, $3,)
+	querySQL := `INSERT INTO scooters(model_id, owner_id, serial_number)
+	   		VALUES($1, $2, $3)
 	   		RETURNING id;`
 	err := sup.db.QueryResultRow(context.Background(), querySQL, scooter.ScooterModel.ID, scooter.User.ID, scooter.SerialNumber).Scan(&id)
 	if err != nil {
 		return err
 	}
-	scooter.ID = id
+//	scooter.ID = id
 	return nil
 }
 
-func (sup *SupplierRepoDB) UpdateScooter(scooterId int, scooterData models.Scooter)(models.Scooter, error){
+func (sup *SupplierRepoDB) EditScooter(scooterId int, scooterData models.Scooter)(models.Scooter, error){
 	scooter := models.Scooter{}
 	querySQL := `UPDATE scooters
-	   		SET serial_number=$1,
-	   		WHERE id=$2
-	   		RETURNING id, serial_number;`
-	err := sup.db.QueryResultRow(context.Background(), querySQL, scooterData.SerialNumber).Scan(&scooter.ID,&scooter.SerialNumber)
+	   		SET model_id=$1, owner_id=$2, serial_number=$3
+	   		WHERE id=$4
+	   		RETURNING id, model_id, owner_id, serial_number;`
+	var modelId int
+	err := sup.db.QueryResultRow(context.Background(), querySQL, scooterData.ScooterModel.ID, scooterData.User.ID, scooterData.SerialNumber, scooterId).Scan(
+		&scooter.ID,  &modelId, &userId,  &scooter.SerialNumber)
 	if err != nil {
 		return scooter, err
 	}
 
+	scooter.ScooterModel, err = sup.GetScooterModelById(modelId)
+	if err != nil {
+		return scooter, err
+	}
 	return scooter, nil
 }
 
-
 func (sup *SupplierRepoDB) DeleteScooter(id int) error {
-	querySQL := `DELETE FROM scooter WHERE id = $1;`
+	querySQL := `DELETE FROM scooters WHERE id = $1;`
 	_, err := sup.db.QueryExec(context.Background(), querySQL, userId)
 	return err
 }
@@ -182,7 +177,7 @@ func (sup *SupplierRepoDB) DeleteScooter(id int) error {
 func (sup *SupplierRepoDB) GetPaymentTypes() (*models.PaymentTypeList, error) {
 	list := &models.PaymentTypeList{}
 
-	querySQL := `SELECT * FROM payment_type ORDER BY id DESC;`
+	querySQL := `SELECT * FROM payment_types ORDER BY id DESC;`
 	rows, err := sup.db.QueryResult(context.Background(), querySQL)
 	if err != nil {
 		return list, err
@@ -204,12 +199,12 @@ func (sup *SupplierRepoDB)FindPaymentTypeList(paymentType *models.PaymentTypeLis
 			return v, nil
 		}
 	}
-	return models.PaymentType{}, fmt.Errorf("not found role id=%d", paymentTypeId)
+	return models.PaymentType{}, fmt.Errorf("not found paymentType id=%d", paymentTypeId)
 }
 
 func (sup *SupplierRepoDB) GetPaymentTypeById(paymentTypeId int) (models.PaymentType, error) {
 	paymentType := models.PaymentType{}
-	querySQL := `SELECT * FROM payment_type WHERE id = $1;`
+	querySQL := `SELECT * FROM payment_types WHERE id = $1;`
 	row := sup.db.QueryResultRow(context.Background(), querySQL, paymentTypeId)
 	err := row.Scan(&paymentType.ID, &paymentType.Name)
 	return paymentType, err

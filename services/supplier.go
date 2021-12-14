@@ -7,11 +7,11 @@ import (
 
 type SupplierService struct {
 	ScooterModelRepo repositories.ScooterModelRepoI
-	PaymentTypeRepo repositories.PaymentTypeI
+	PaymentTypeRepo repositories.PaymentTypeRepoI
 	ScooterRepo repositories.ScooterRepoI
 }
 
-func NewSupplierService(ScooterModelRepo repositories.ScooterModelRepoI, PaymentTypeRepo repositories.PaymentTypeI, ScooterRepo repositories.ScooterRepoI) *SupplierService {
+func NewSupplierService(ScooterModelRepo repositories.ScooterModelRepoI, PaymentTypeRepo repositories.PaymentTypeRepoI, ScooterRepo repositories.ScooterRepoI) *SupplierService {
 	return &SupplierService{
 		ScooterModelRepo : ScooterModelRepo,
 		PaymentTypeRepo : PaymentTypeRepo,
@@ -31,7 +31,6 @@ func (sup *SupplierService)GetScooterModelById(modelId int) (models.ScooterModel
 	return sup.ScooterModelRepo.GetScooterModelById(modelId)
 }
 
-
 func (sup *SupplierService)GetAllScooters()(*models.ScooterList, error) {
 	return sup.ScooterRepo.GetAllScooters()
 }
@@ -40,22 +39,20 @@ func (sup *SupplierService)FindScooterList(scooterModel *models.ScooterModelList
 	return sup.ScooterRepo.FindScooterList(scooterModel,scooterModelId)
 }
 
-
 func (sup *SupplierService)GetScooterByID(id int) (models.Scooter, error){
 	return sup.ScooterRepo.GetScooterByID(id)
 }
 
-func (sup *SupplierService)GetScooterByModelId(id int)(*models.ScooterList, error){
-	return sup.ScooterRepo.GetScootersByModelId(id)
+func (sup *SupplierService)GetScooterById(id int)(models.Scooter, error){
+	return sup.ScooterRepo.GetScooterByID(id)
 }
-
 
 func (sup *SupplierService)AddScooter(scooter *models.Scooter)error{
 	return sup.ScooterRepo.AddScooter(scooter)
 }
 
 func (sup *SupplierService)UpdateScooter(scooterId int,scooterData models.Scooter) (models.Scooter, error){
-	return sup.ScooterRepo.UpdateScooter(scooterId,scooterData)
+	return sup.ScooterRepo.EditScooter(scooterId,scooterData)
 }
 
 func (sup *SupplierService)DeleteScooter(id int) error{
@@ -73,3 +70,4 @@ func (sup *SupplierService)GetPaymentTypeById(paymentTypeId int) (models.Payment
 func (sup *SupplierService)FindPaymentTypeList(paymentType *models.PaymentTypeList, paymentTypeId int)(models.PaymentType, error){
 	return  sup.PaymentTypeRepo.FindPaymentTypeList(paymentType,paymentTypeId)
 }
+

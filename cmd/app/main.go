@@ -50,6 +50,9 @@ func main() {
 	var supplierRepoDB = postgres.NewSupplierRepoDB(db)
 	var supplierService = services.NewSupplierService(supplierRepoDB, supplierRepoDB, supplierRepoDB)
 
+	var ODTRepoDB = postgres.NewODTRepoDB(db)
+	var ODTService = services.NewODTService(ODTRepoDB)
+
 	sessStore := sessions.NewCookieStore([]byte(sessionKey))
 	authService := services.NewAuthService(userRoleRepoDB, sessStore)
 
@@ -57,6 +60,7 @@ func main() {
 	routing.AddUserHandler(handler, userService)
 	routing.AddAccountHandler(handler, accService)
 	routing.AddSupplierHandler(handler, supplierService)
+	routing.AddODTHandler(handler, ODTService)
 	httpServer := httpserver.New(handler, httpserver.Port(configs.HTTP_PORT))
 
 	interrupt := make(chan os.Signal, 1)

@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS supplier_commissions
 CREATE TABLE IF NOT EXISTS supplier_prices
 (
     id               serial PRIMARY KEY,
-    price            NUMERIC(15, 2),
+    price            int,
     payment_type_id  smallint NOT NULL,
     user_id          int      NOT NULL,
 
@@ -129,8 +129,9 @@ CREATE TABLE IF NOT EXISTS scooter_statuses
     scooter_id     int PRIMARY KEY,
     location_id    int,
     battery_remain NUMERIC(5, 2),
-    can_be_rent     boolean,
     station_id     int,
+    latitude      NUMERIC(16, 14),
+    longitude     NUMERIC(16, 14),
 
     FOREIGN KEY (scooter_id)  REFERENCES scooters (id),
     FOREIGN KEY (location_id) REFERENCES locations (id),
@@ -238,4 +239,17 @@ INSERT INTO users(login_email, is_blocked, user_name, user_surname, role_id) VAL
 INSERT INTO users(login_email, is_blocked, user_name, user_surname, role_id) VALUES('UserB@mail.com', true, 'Beyonce', 'Ivanova', 2);
 INSERT INTO users(login_email, is_blocked, user_name, user_surname, role_id) VALUES('telo@mail.com', false, 'Goga', 'Boba', 2);
 INSERT INTO users(login_email, is_blocked, user_name, user_surname, role_id, password_hash) VALUES('gtr@gmail.com', false, 'Gregor', 'Tyson', 7, '$2a$10$Le9uo/qFrA.EPFh5d1Z5Wu1EaNCVMkeV1dOT/q86ZZ.obCeSY/472');
+
+INSERT INTO scooter_models(payment_type_id, model_name, max_weight, speed) VALUES(4, 'Model1',120,25);
+INSERT INTO scooter_models(payment_type_id, model_name, max_weight, speed) VALUES(5, 'Model2',110,20);
+INSERT INTO scooter_models(payment_type_id, model_name, max_weight, speed) VALUES(6, 'Model3',110,20);
+
+INSERT INTO scooters(model_id, owner_id, serial_number) VALUES(1, 1 ,'11020');
+INSERT INTO scooters(model_id, owner_id, serial_number) VALUES(1, 1 ,'22222');
+INSERT INTO scooters(model_id, owner_id, serial_number) VALUES(2, 2 ,'33333');
+
+INSERT INTO supplier_prices(price, payment_type_id, user_id) VALUES(150,4,1);
+INSERT INTO supplier_prices(price, payment_type_id, user_id) VALUES(100,5,1);
+INSERT INTO supplier_prices(price, payment_type_id, user_id) VALUES(50,6,1);
 COMMIT;
+

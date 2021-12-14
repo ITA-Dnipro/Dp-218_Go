@@ -2,26 +2,16 @@ package models
 
 import "time"
 
-type ScooterUploaded struct {
-	Model 		 		ScooterModel    `json,scv:"scooter_model"`
-	Owner			 	User 			`json,scv:"user"`
-	Scooter 	  		Scooter  		`json,scv:"scooter"`
-}
-
-type ScooterUploadedList struct {
-	ScooterUploaded []ScooterUploaded `json:"roles"`
-}
-
 type ScooterModel struct {
-	ID          int         `json:"id"`
-	PaymentType PaymentType `json:"payment_type"`
+	ID          		int         `json:"id"`
+	PaymentType 		PaymentType `json:"payment_type"`
 	ModelName         	string 		`json:"model_name"`
 	MaxWeight         	int    		`json:"max_weight"`
 	Speed 			  	int    		`json:"speed"`
 }
 
 type ScooterModelList struct {
-	ScooterModels []ScooterModel `json:"roles"`
+	ScooterModels []ScooterModel `json:"scooter_models"`
 }
 
 type Scooter struct {
@@ -32,7 +22,7 @@ type Scooter struct {
 }
 
 type ScooterList struct {
-	Scooters []Scooter `json:"roles"`
+	Scooters []Scooter `json:"scooters"`
 }
 
 type Location struct {
@@ -43,7 +33,7 @@ type Location struct {
 }
 
 type LocationList struct {
-	Locations []Location `json:"roles"`
+	Locations []Location `json:"locations"`
 }
 
 type ScooterStation struct {
@@ -54,7 +44,17 @@ type ScooterStation struct {
 }
 
 type ScooterStationList struct {
-	ScooterStations []ScooterStation `json:"roles"`
+	ScooterStations []ScooterStation `json:"scooter_stations"`
+}
+
+type ScooterStatuses struct {
+	ID      	 int 		`json:"id"`
+	User       	 User    	`json:"user"`
+	Scooter      Scooter 	`json:"scooter"`
+	Station      ScooterStation    `json:"station"`
+	DateTime 	 time.Time	`json:"date_time"`
+	Location     Location	`json:"location"`
+	IsReturned   bool		`json:"is_returned"`
 }
 
 type ScooterStatusesInRent struct {
@@ -68,5 +68,16 @@ type ScooterStatusesInRent struct {
 }
 
 type ScooterStatusesInRentList struct {
-	ScootersStatusesInRent []ScooterStatusesInRent `json:"roles"`
+	ScootersStatusesInRent []ScooterStatusesInRent `json:"scooters_statuses_in_rent"`
+}
+
+type SupplierPrices struct {
+	ID  	int `json:"id"`
+	Price 	int `json:"price"`
+	PaymentType PaymentType `json:"payment_type"`
+	User    User  `json:"user"`
+}
+
+type SupplierPricesList struct {
+	SupplierPrices []SupplierPrices `json:"supplier_prices_list"`
 }

@@ -114,7 +114,8 @@ func (urdb *UserRepoDB) UpdateUser(userId int, userData models.User) (models.Use
 		RETURNING id, created_at, login_email, is_blocked, user_name, user_surname, role_id;`
 	var roleId int
 	err := urdb.db.QueryResultRow(context.Background(), querySQL, userData.LoginEmail, userData.IsBlocked, userData.UserName,
-		userData.UserSurname, userData.Role.ID, userId).Scan(&user.ID, &user.CreatedAt, &user.LoginEmail, &user.IsBlocked, &user.UserName, &user.UserSurname, &roleId)
+		userData.UserSurname, userData.Role.ID, userId).Scan(&user.ID, &user.CreatedAt, &user.LoginEmail, &user.IsBlocked, &user.UserName,
+			&user.UserSurname, &roleId)
 	if err != nil {
 		return user, err
 	}

@@ -6,68 +6,57 @@ import (
 )
 
 type SupplierService struct {
-	ScooterModelRepo repositories.ScooterModelRepoI
-	PaymentTypeRepo repositories.PaymentTypeRepoI
-	ScooterRepo repositories.ScooterRepoI
+	SupplierRepo repositories.SupplierRepoI
 }
 
-func NewSupplierService(ScooterModelRepo repositories.ScooterModelRepoI, PaymentTypeRepo repositories.PaymentTypeRepoI, ScooterRepo repositories.ScooterRepoI) *SupplierService {
+func NewSupplierService(SupplierRepo repositories.SupplierRepoI) *SupplierService {
 	return &SupplierService{
-		ScooterModelRepo : ScooterModelRepo,
-		PaymentTypeRepo : PaymentTypeRepo,
-		ScooterRepo : ScooterRepo,
+		SupplierRepo : SupplierRepo,
 	}
 }
 
-func (sup *SupplierService)CreateScooterModel(scooterModel *models.ScooterModel)error{
-	return sup.ScooterModelRepo.CreateScooterModel(scooterModel)
+func (s *SupplierService)GetAllScooters()(*models.ScooterList, error) {
+	return s.SupplierRepo.GetAllScooters()
 }
 
-func (sup *SupplierService)GetScooterModels()(*models.ScooterModelList, error) {
-	return sup.ScooterModelRepo.GetScooterModels()
+func (s *SupplierService)GetScooterByID(id int) (models.Scooter, error){
+	return s.SupplierRepo.GetScooterByID(id)
 }
 
-func (sup *SupplierService)GetScooterModelById(modelId int) (models.ScooterModel, error){
-	return sup.ScooterModelRepo.GetScooterModelById(modelId)
+func (s *SupplierService)GetScooterById(id int)(models.Scooter, error){
+	return s.SupplierRepo.GetScooterByID(id)
 }
 
-func (sup *SupplierService)GetAllScooters()(*models.ScooterList, error) {
-	return sup.ScooterRepo.GetAllScooters()
+func (s *SupplierService)AddScooter(scooter *models.Scooter)error{
+	return s.SupplierRepo.AddScooter(scooter)
 }
 
-func (sup *SupplierService)FindScooterList(scooterModel *models.ScooterModelList, scooterModelId int)(models.ScooterModel, error){
-	return sup.ScooterRepo.FindScooterList(scooterModel,scooterModelId)
+func (s *SupplierService)UpdateScooter(scooterId int,scooterData models.Scooter) (models.Scooter, error){
+	return s.SupplierRepo.EditScooter(scooterId,scooterData)
 }
 
-func (sup *SupplierService)GetScooterByID(id int) (models.Scooter, error){
-	return sup.ScooterRepo.GetScooterByID(id)
+func (s *SupplierService)DeleteScooter(id int) error{
+	return s.SupplierRepo.DeleteScooter(id)
 }
 
-func (sup *SupplierService)GetScooterById(id int)(models.Scooter, error){
-	return sup.ScooterRepo.GetScooterByID(id)
+func (s *SupplierService)InsertScootersToDb(path string){
+	s.SupplierRepo.ConvertToStruct(path)
 }
 
-func (sup *SupplierService)AddScooter(scooter *models.Scooter)error{
-	return sup.ScooterRepo.AddScooter(scooter)
+func (s *SupplierService)GetModels()(*models.ModelODTList, error) {
+	return s.SupplierRepo.GetModels()
 }
 
-func (sup *SupplierService)UpdateScooter(scooterId int,scooterData models.Scooter) (models.Scooter, error){
-	return sup.ScooterRepo.EditScooter(scooterId,scooterData)
+func (s *SupplierService)SelectModel(id int)(*models.ModelODT, error) {
+	return s.SupplierRepo.SelectModel(id)
 }
 
-func (sup *SupplierService)DeleteScooter(id int) error{
-	return sup.ScooterRepo.DeleteScooter(id)
+func (s *SupplierService)AddModel(modelData *models.ModelODT)error {
+	return s.SupplierRepo.AddModel(modelData)
 }
 
-func (sup *SupplierService)GetPaymentTypes() (*models.PaymentTypeList, error){
-	return sup.PaymentTypeRepo.GetPaymentTypes()
+func (s *SupplierService)ChangePrice(modelData *models.ModelODT)error {
+	return s.SupplierRepo.EditPrice(modelData)
 }
 
-func (sup *SupplierService)GetPaymentTypeById(paymentTypeId int) (models.PaymentType, error) {
-	return  sup.PaymentTypeRepo.GetPaymentTypeById(paymentTypeId)
-}
-
-func (sup *SupplierService)FindPaymentTypeList(paymentType *models.PaymentTypeList, paymentTypeId int)(models.PaymentType, error){
-	return  sup.PaymentTypeRepo.FindPaymentTypeList(paymentType,paymentTypeId)
-}
 

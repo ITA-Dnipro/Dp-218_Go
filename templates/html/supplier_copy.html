@@ -30,71 +30,43 @@
 </header>
 <body>
 
-<h3>Add Model</h3>
-<div class="table-responsive">
-    <form method="post" action="/createModel">
-        <table class="table table-striped table-sm">
-            <thead>
-                <tr>
-                    <th>Price</th>
-                    <th>Model Name</th>
-                    <th>Max Weight</th>
-                    <th>Speed</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>
-                    <input type="number" name="price" placeholder="Price"/>
-                <td>
-                    <input type="text" name="modelName" placeholder="Model Name"/>
-                </td>
-                <td>
-                    <input type="number" name="maxWeight" placeholder="Max Weight"/>
-                </td>
-                <td>
-                    <input type="number" name="speed" placeholder="Speed"/>
-                </td>
-                <td>
-                    <input type="submit" value="Send" />
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </form>
-</div>
 <h1>List of Models</h1>
+
 <div class="table-responsive">
     <table class="table table-striped table-sm">
         <thead>
         <tr>
             <th class="d-none">ID</th>
-            <th>Price</th>
             <th>Model Name</th>
             <th>Max Weight</th>
             <th>Speed</th>
+            <th>Price</th>
             <th></th>
             <th></th>
             <th></th>
         </tr>
         </thead>
         <tbody>
+
         {{range .ModelsODT}}
         <tr>
             <ul>
                 <div id="dropdown" class="ddmenu">
                     <td class="d-none">{{.ID}}0</td>
-                    <td>{{.Price}}</td>
-                    <td>{{.ModelName}}</td>
-                    <td>{{.MaxWeight}}</td>
-                    <td>{{.Speed}}</td>
+                    <td>1{{.ModelName}}</td>
+                    <td>2{{.MaxWeight}}</td>
+                    <td>3{{.Speed}}</td>
+                    <td>4{{.Price}}</td>
                     <td>
-                        <button type="button" class="btn btn-primary" onclick="window.location.href='/modelODT/{{.ID}}'">Select model
+                        <button type="button" class="btn btn-primary" onclick="window.location.href='/modelODT/{{.ID}}'">Upload scooters
                         </button>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-primary" onclick="window.location.href='/modelODT/{{.ID}}'">Change Price
+                        <button type="button" class="btn btn-primary" onclick="window.location.href='/modelODT/{{.ID}}'">Add scooter
+                        </button>
+                     </td>
+                    <td>
+                        <button type="button" class="btn btn-primary" onclick="window.location.href='/modelODT/{{.ID}}'">Edit price
                         </button>
                     </td>
                     <td>
@@ -106,10 +78,20 @@
                     </td>
                 </div>
                 <ul>
-
+                    {{range .Scooters}}
+                    <li>
+                        <td class="d-none">{{.ID}}</td>
+                        <td>{{.SerialNumber}}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary" onclick="window.location.href='/modelODT/{{.ID}}'">Edit serial
+                            </button>
+                        </td>
+                    </li>
+                    {{end}}
                 </ul>
             </ul>
         </tr>
+
         {{end}}
         </tbody>
     </table>

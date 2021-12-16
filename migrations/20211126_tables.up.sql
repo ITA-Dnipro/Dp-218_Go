@@ -217,12 +217,9 @@ CREATE TABLE IF NOT EXISTS account_transactions
 );
 
 BEGIN;
-INSERT INTO payment_types(id, name) VALUES(1, 'comission');
-INSERT INTO payment_types(id, name) VALUES(2, 'simple income');
-INSERT INTO payment_types(id, name) VALUES(3, 'simple outcome');
-INSERT INTO payment_types(id, name) VALUES(4, 'rent scooter class1');
-INSERT INTO payment_types(id, name) VALUES(5, 'rent scooter class2');
-INSERT INTO payment_types(id, name) VALUES(6, 'rent scooter class3');
+INSERT INTO payment_types(name) VALUES('commission');
+INSERT INTO payment_types(name) VALUES('simple income');
+INSERT INTO payment_types(name) VALUES('simple outcome');
 
 INSERT INTO roles(id, name, is_admin, is_user, is_supplier) VALUES(1, 'admin role', true, false, false);
 INSERT INTO roles(id, name, is_admin, is_user, is_supplier) VALUES(2, 'user role', false, true, false);
@@ -239,7 +236,7 @@ INSERT INTO users(login_email, is_blocked, user_name, user_surname, role_id) VAL
 INSERT INTO users(login_email, is_blocked, user_name, user_surname, role_id) VALUES('UserB@mail.com', true, 'Beyonce', 'Ivanova', 2);
 INSERT INTO users(login_email, is_blocked, user_name, user_surname, role_id) VALUES('telo@mail.com', false, 'Goga', 'Boba', 2);
 INSERT INTO users(login_email, is_blocked, user_name, user_surname, role_id, password_hash) VALUES('gtr@gmail.com', false, 'Gregor', 'Tyson', 7, '$2a$10$Le9uo/qFrA.EPFh5d1Z5Wu1EaNCVMkeV1dOT/q86ZZ.obCeSY/472');
-
+/*
 INSERT INTO scooter_models(payment_type_id, model_name, max_weight, speed) VALUES(4, 'Model1',120,25);
 INSERT INTO scooter_models(payment_type_id, model_name, max_weight, speed) VALUES(5, 'Model2',110,20);
 INSERT INTO scooter_models(payment_type_id, model_name, max_weight, speed) VALUES(6, 'Model3',110,20);
@@ -251,5 +248,6 @@ INSERT INTO scooters(model_id, owner_id, serial_number) VALUES(2, 2 ,'33333');
 INSERT INTO supplier_prices(price, payment_type_id, user_id) VALUES(150,4,1);
 INSERT INTO supplier_prices(price, payment_type_id, user_id) VALUES(100,5,1);
 INSERT INTO supplier_prices(price, payment_type_id, user_id) VALUES(50,6,1);
+ */
 COMMIT;
 

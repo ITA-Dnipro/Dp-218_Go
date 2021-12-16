@@ -4,24 +4,22 @@ import (
 	"Dp218Go/models"
 )
 
-type ScooterModelRepoI interface {
-	CreateScooterModel(scooterModel *models.ScooterModel)error
-	GetScooterModels() (*models.ScooterModelList, error)
-	GetScooterModelById(modelId int)(models.ScooterModel, error)
-}
+type SupplierRepoI interface {
+	GetModels()(*models.ModelODTList, error)
+	SelectModel(id int)(*models.ModelODT, error)
+	AddModel(modelData *models.ModelODT)error
+	EditPrice(modelData *models.ModelODT) error
+	GetPrices()(*models.SupplierPricesODTList, error)
+	GetPrice(paymentTypeId, userId int) (int, error)
+	AddPaymentTypeId(modelName string)(int,error)
+	GetPaymentTypeByModelName(modelName string) (int, error)
 
-type ScooterRepoI interface {
+
 	GetAllScooters() (*models.ScooterList, error)
 	GetScooterByID(id int) (models.Scooter, error)
 	AddScooter(scooter *models.Scooter) error
 	EditScooter(scooterId int,scooterData models.Scooter) (models.Scooter, error)
 	DeleteScooter(id int) error
-	FindScooterList(scooterModel *models.ScooterModelList, scooterModelId int ) (models.ScooterModel, error)
-}
-
-type PaymentTypeRepoI interface {
-	GetPaymentTypes() (*models.PaymentTypeList, error)
-	GetPaymentTypeById(paymentTypeId int) (models.PaymentType, error)
-	FindPaymentTypeList(paymentType *models.PaymentTypeList, paymentTypeId int)(models.PaymentType, error)
+	ConvertToStruct(path string)[]models.Scooter
 }
 

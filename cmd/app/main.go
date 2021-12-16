@@ -48,10 +48,7 @@ func main() {
 	var accService = services.NewAccountService(accRepoDb, accRepoDb, accRepoDb)
 
 	var supplierRepoDB = postgres.NewSupplierRepoDB(db)
-	var supplierService = services.NewSupplierService(supplierRepoDB, supplierRepoDB, supplierRepoDB)
-
-	var ODTRepoDB = postgres.NewODTRepoDB(db)
-	var ODTService = services.NewODTService(ODTRepoDB)
+	var supplierService = services.NewSupplierService(supplierRepoDB)
 
 	sessStore := sessions.NewCookieStore([]byte(sessionKey))
 	authService := services.NewAuthService(userRoleRepoDB, sessStore)
@@ -59,8 +56,8 @@ func main() {
 	handler := routing.NewRouter(authService)
 	routing.AddUserHandler(handler, userService)
 	routing.AddAccountHandler(handler, accService)
-	routing.AddSupplierHandler(handler, supplierService)
-	routing.AddODTHandler(handler, ODTService)
+	routing.AddScooterModelHandler(handler, supplierService)
+	routing.AddScooterHandler(handler, supplierService)
 	httpServer := httpserver.New(handler, httpserver.Port(configs.HTTP_PORT))
 
 	interrupt := make(chan os.Signal, 1)

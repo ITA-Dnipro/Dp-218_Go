@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
         integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
   <link rel="icon" type="image/png" href="/templates/img/favicon.png">
-  <title>User edit</title>
+  <title>New problem</title>
 </head>
 <body>
 <header>
@@ -18,44 +18,47 @@
       <b><a class="navbar-brand" href="/">Dnepr Scooters</a></b>
 
       <div class="collapse navbar-collapse" id="navbarColor02">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/users">Users info</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/accounts">Accounting</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/scooters">Scooters</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/stations">Stations</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/signout">Logout</a>
-        </li>
-      </ul>
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/problems">Problem list</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/home">Back to profile</a>
+          </li>
+        </ul>
       </div>
-
     </nav>
   </div>
 </header>
 
-<h1>Aggregator profile</h1>
+<form class="needs-validation" novalidate="" method="post" action="/problems">
 
 <div class="bs-component">
   <div class="jumbotron">
-    <h2 class="display-3">Hello, {{.UserSurname}} {{.UserName}}!</h2>
-    <p class="lead">Here you can see and manage all the system info.</p>
+    <h2 class="display-5">New problem report&nbsp;&nbsp;{{.Problem.User.UserName}}&nbsp;{{.Problem.User.UserSurname}}</h2>
     <hr class="my-4">
-    <ul>
-      <li><b>Users info</b> - view and edit users info</li>
-      <li><b>Accounting</b> - manage your accounting data, view money reports</li>
-      <li><b>Scooters</b> - view and manage your own & supplier's scooters</li>
-      <li><b>Stations</b> - view and manage scooter stations</li>
-    </ul>
+    <p class="lead col-sm-4">Problem type:
+      <select class="custom-select d-block w-100" id="typeSelect" name="TypeID" required="">
+        {{range .Types}}
+        <option value="{{.ID}}">{{.Name}}</option>
+        {{end}}
+      </select>
+    </p>
+    <hr class="my-4">
+    <h3>Description</h3>
+    <div class="alert alert-dismissible alert-danger col-sm-6">
+      <textarea class="form-control" id="Description" name = "Description" rows="5" required=""></textarea>
+    </div>
   </div>
 </div>
+
+  <button type="button" class="btn btn-secondary" onclick="window.location.href='/problems'">Cancel</button>
+  <button type="submit" class="btn btn-primary">Report</button>
+
+  <input type="hidden" name="UserID" value="{{.Problem.User.ID}}">
+  <input type="hidden" name="ScooterID" value="0">
+</form>
+
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -63,5 +66,10 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
         crossorigin="anonymous"></script>
+<script>
+  if ( window.history.replaceState ) {
+    window.history.replaceState( null, null, window.location.href );
+  }
+</script>
 </body>
 </html>

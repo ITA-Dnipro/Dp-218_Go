@@ -6,6 +6,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
+// testing with ginkgo
 var _ = Describe("Coordinate", func() {
 	var coordinate1, coordinate2 *models.Coordinate
 	var actualDistance float64

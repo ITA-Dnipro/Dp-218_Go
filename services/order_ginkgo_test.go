@@ -29,9 +29,6 @@ var _ = Describe(".orderService testing", func() {
 		fakeMileage = 233.33
 	})
 
-	AfterEach(func() {
-		mockCtrl.Finish()
-	})
 	Context("when DeleteOrder is correct", func() {
 		BeforeEach(func() {
 			repoOrder.EXPECT().DeleteOrder(1).Return(nil)
@@ -79,7 +76,7 @@ var _ = Describe(".orderService testing", func() {
 	})
 
 	Context("when GetScooterMileageByID returns a correct mileage ", func() {
-		JustBeforeEach(func() {
+		BeforeEach(func() {
 			repoOrder.EXPECT().GetScooterMileageByID(1).Return(fakeMileage, nil).AnyTimes()
 		})
 		It("should return a value is equal to fakeMileage", func() {

@@ -22,17 +22,20 @@ var _ = Describe("Handlers", func() {
 		handler http.Handler
 		writer  *httptest.ResponseRecorder
 	)
-	Describe("HandlePOST", func() {
+
+	Describe("HandlePOST of ChooseScooter", func() {
 		BeforeEach(func() {
 			handler = http.HandlerFunc(routing.ChooseScooter)
 			req = httptest.NewRequest(http.MethodPost, "/choose-scooter", nil)
 			req.Form = url.Values{"id": {"2"}}
 			writer = httptest.NewRecorder()
 		})
+
 		It("Processes a POST request successfully", func() {
 			handler.ServeHTTP(writer, req)
 			Expect(writer.Code).To(Equal(http.StatusOK))
 		})
+
 		Context("When we post the wrong data", func() {
 			JustBeforeEach(func() {
 				req.Form = url.Values{"id": {"noID"}}
@@ -41,6 +44,32 @@ var _ = Describe("Handlers", func() {
 				handler.ServeHTTP(writer, req)
 				Expect(writer.Code).To(
 					Equal(http.StatusBadRequest))
+			})
+		})
+	})
+
+	Describe("HandlePOST of ChooseStation", func() {
+		BeforeEach(func() {
+			handler = http.HandlerFunc(routing.ChooseStation)
+			req = httptest.NewRequest(http.MethodPost, "/choose-station", nil)
+			req.Form = url.Values{"id": {"12"}}
+			writer = httptest.NewRecorder()
+		})
+
+		Context("when post correct data", func() {
+			It("returns code 200", func() {
+				handler.ServeHTTP(writer, req)
+				Expect(writer.Code).To(Equal(http.StatusOK))
+			})
+		})
+
+		Context("when post incorrect data", func() {
+			JustBeforeEach(func() {
+				req.Form = url.Values{"id": {"notID"}}
+			})
+			It("returns code 400", func() {
+				handler.ServeHTTP(writer, req)
+				Expect(writer.Code).To(Equal(http.StatusBadRequest))
 			})
 		})
 	})

@@ -17,6 +17,8 @@ require (
 	github.com/jackc/pgconn v1.10.1
 	github.com/jackc/pgx/v4 v4.14.0
 	github.com/jszwec/csvutil v1.6.0
+	github.com/onsi/ginkgo/v2 v2.1.1
+	github.com/onsi/gomega v1.17.0
 	github.com/stretchr/testify v1.7.0
 	google.golang.org/grpc v1.41.0
 	google.golang.org/protobuf v1.27.1
@@ -56,5 +58,6 @@ require (
 	golang.org/x/sys v0.0.0-20211210111614-af8b64212486 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/genproto v0.0.0-20211013025323-ce878158c4d4 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )

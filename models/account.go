@@ -54,3 +54,7 @@ func (accTrans *AccountTransaction) GetAmountInMoney() Money {
 		Cents:   coefCents * accTrans.AmountCents % 100,
 	}
 }
+
+func (accTrans *AccountTransaction) ChangeMoneyInTransaction(cents int) {
+	accTrans.AmountCents += cents
+}
